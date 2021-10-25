@@ -49,7 +49,7 @@ module.exports.save = async (req, res, next) => {
   let d = req.body
   let checkUser = await Model.findOne({email: d.email})
   if(!checkUser){
-    let branchId = await Branch.findOne({name: d.branch}, '_id')
+    let branchId = await Branch.findOne({name: d.branches}, '_id')
     let departmentId = await Department.findOne({name: d.department}, '_id')
     let rolesArr = await Role.find({name: d.roles}).select('_id')
     console.log(rolesArr)

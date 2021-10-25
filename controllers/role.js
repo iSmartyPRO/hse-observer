@@ -3,7 +3,7 @@ const Model = require("../models/role")
 module.exports.getAll = (req, res, next) => {
   try {
     Model.find()
-      .select("_id name")
+      .select("_id name description")
       .exec()
       .then((data) => {
         res.status(200).json({message: "Get all data", data})

@@ -4,6 +4,7 @@ import config from './config'
 import Branches from './seeders/branches.seeder'
 import Departments from './seeders/departments.seeder';
 import Users from './seeders/users.seeder';
+import Roles from './seeders/roles.seeder'
 
 const mongoURL = process.env.MONGO_URL || config.MongoDBUri;
 
@@ -15,7 +16,8 @@ const mongoURL = process.env.MONGO_URL || config.MongoDBUri;
 export const seedersList = {
   Branches,
   Departments,
-  Users
+  Users,
+  Roles
 };
 /**
  * Connect to mongodb implementation

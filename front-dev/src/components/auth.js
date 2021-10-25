@@ -8,12 +8,6 @@ export const authService = {
   logout,
   currentUser: currentUserSubject.asObservable(),
   get currentUserValue () { return currentUserSubject.value },
-  token: currentUserSubject.value.token,
-  httpHeader: {
-    headers: {
-      Authorization: `Bearer ${currentUserSubject.value.token}`
-    }
-  }
 }
 
 function login(email, password){

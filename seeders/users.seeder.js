@@ -31,17 +31,20 @@ class UsersSeeder extends Seeder {
     let branches = await Branch.find()
     let departments = await Department.find()
     for(let i = 0; i < users.length; i++){
+      //console.log(users[i].mail ? users[i].mail : `>>>>>>>>>>>>noemail`)
       let plainTextPassword = makeid(12)
       let hashedPassword = await bcrypt.hashSync(plainTextPassword, 10)
-      data.push({
-        name: users[i].description,
-        email: users[i].mail,
-        position: users[i].title,
-        password: hashedPassword,
-        plainTextPassword,
-        branches: (branches.find(x => x.name == users[i].branch)._id),
-        department: (departments.find(x => x.name == users[i].department)._id)
-      })
+      if(users[i].mail) {
+        data.push({
+          name: users[i].description,
+          email: users[i].mail,
+          position: users[i].title,
+          password: hashedPassword,
+          plainTextPassword,
+          branches: (branches.find(x => x.name == users[i].branch)._id),
+          department: (departments.find(x => x.name == users[i].department)._id)
+        })
+      }
     }
     //await users.forEach(user => {
       /* let plainTextPassword = makeid(7)

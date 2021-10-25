@@ -1,4 +1,5 @@
 <template>
+
     <Header v-if="currentUser" />
     <Leftbar v-if="currentUser" />
     <router-view />

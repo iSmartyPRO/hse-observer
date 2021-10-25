@@ -1,11 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useToast } from "vue-toastification"
 import { authService } from '../components/auth'
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Logout from '../views/Logout.vue'
 
+import { Role } from "../_helpers"
+
 // Users
 import Users from '../views/Users/index.vue'
+import UserCreate from '../views/Users/create.vue'
+import UserEdit from '../views/Users/edit.vue'
 
 // Bracnhes
 import Branches from '../views/Bracnhes/index.vue'
@@ -19,7 +24,7 @@ import Observes from '../views/Observes/index.vue'
 // Roles
 import Roles from '../views/Roles/index.vue'
 
-
+const toast = useToast();
 
 const routes = [
   {
@@ -40,28 +45,43 @@ const routes = [
   {
     path: '/users',
     name: 'Users',
-    component: Users
+    component: Users,
+    meta: { authorize: [Role.Admin] }
+  },
+  {
+    path: '/user/create',
+    name: 'UserCreate',
+    component: UserCreate,
+    meta: { authorize: [Role.Admin] }
+  },
+  {
+    path: '/user/:userId',
+    name: 'UserEdit',
+    component: UserEdit,
+    meta: { authorize: [Role.Admin] }
   },
   {
     path: '/departments',
     name: 'Departments',
-    component: Departments
+    component: Departments,
+    meta: { authorize: [Role.Admin] }
   },
   {
     path: '/branches',
     name: 'Branches',
-    component: Branches
+    component: Branches,
+    meta: { authorize: [Role.Admin] }
   },
   {
     path: '/observes',
     name: "Observes",
-    component: Observes
+    component: Observes,
   },
   {
     path: '/roles',
     name: 'Roles',
-    component: Roles
-
+    component: Roles,
+    meta: { authorize: [Role.Standard] } 
   }
 ]
 
@@ -70,7 +90,6 @@ const router = createRouter({
   routes,
   apiUrl: 'http://localhost:9090/api',
 })
-
 router.beforeEach((to, from, next) => {
   const {authorize} = to.meta
   const currentUser = authService.currentUserValue
@@ -79,9 +98,9 @@ router.beforeEach((to, from, next) => {
       // not logged in so redirect to login page with the return url
       return next({ path: '/login', query: { returnUrl: to.path }})
     }
-
     // check if route is restricted by role
-    if( authorize.length && currentUser.roles.find(item => { return authorize.includes(item)}) ? false : true ) {
+    if( authorize.length && !currentUser.roles.find(item => { return (authorize.map(item => item.toLowerCase())).includes(item)}) ? true : false ) {
+      toast.error("Запрещенный маршрут")
       return next({ path: '/' })
     }
   }

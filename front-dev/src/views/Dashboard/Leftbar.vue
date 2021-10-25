@@ -99,6 +99,8 @@
 
 <script>
 import {authService} from "../../components/auth"
+import {requestOptions} from "../../_helpers/request-options"
+import {handleResponse} from "../../_helpers/handle-response"
 import axios from "axios"
 
 export default {
@@ -106,12 +108,13 @@ export default {
 	},
 	mounted() {
 		axios
-			.get(`http://localhost:9090/api/user/${authService.currentUserValue.uid}`, authService.httpHeader)
+			.get(`http://localhost:9090/api/user/${authService.currentUserValue.uid}`, requestOptions.get())
 			.then(response => {
 				this.user = response.data.data
 				this.name = this.user.name
 				this.position = this.user.position
 				})
+			.catch(err => authService.logout())
 	},
 	data() {
 		return {

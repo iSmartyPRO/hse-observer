@@ -18,13 +18,13 @@
 					<div class="uk-margin-small">
 						<div class="uk-inline uk-width-1-1">
 							<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"></span>
-							<input class="uk-input uk-border-pill" v-model="email" required placeholder="E-mail" type="text">
+							<input class="uk-input uk-border-pill" v-model="email" required placeholder="E-mail" type="text" name="email">
 						</div>
 					</div>
 					<div class="uk-margin-small">
 						<div class="uk-inline uk-width-1-1">
 							<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
-							<input class="uk-input uk-border-pill" required placeholder="Password" type="password" v-model="password">
+							<input class="uk-input uk-border-pill" required placeholder="Password" type="password" v-model="password" name="password">
 						</div>
 					</div>
 					<div class="uk-margin-bottom">
