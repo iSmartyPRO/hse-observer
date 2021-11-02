@@ -7,28 +7,10 @@
 						<div class="uk-navbar-item uk-hidden@m">
 							<a class="uk-logo" href="#"><img class="custom-logo" src="img/dashboard-logo-white.svg" alt=""></a>
 						</div>
-						<ul class="uk-navbar-nav uk-visible@m">
-							<li><a href="#">Accounts</a></li>
-							<li>
-								<a href="#">Settings <span data-uk-icon="icon: triangle-down"></span></a>
-								<div class="uk-navbar-dropdown">
-									<ul class="uk-nav uk-navbar-dropdown-nav">
-										<li class="uk-nav-header">YOUR ACCOUNT</li>
-										<li><a href="#"><span data-uk-icon="icon: info"></span> Summary</a></li>
-										<li><a href="#"><span data-uk-icon="icon: refresh"></span> Edit</a></li>
-										<li><a href="#"><span data-uk-icon="icon: settings"></span> Configuration</a></li>
-										<li class="uk-nav-divider"></li>
-										<li><a href="#"><span data-uk-icon="icon: image"></span> Your Data</a></li>
-										<li class="uk-nav-divider"></li>
-										<li><a href="#"><span data-uk-icon="icon: sign-out" @click="logout"></span> Logout</a></li>
-									</ul>
-								</div>
-							</li>
-						</ul>
 						<div class="uk-navbar-item uk-visible@s">
-							<form action="dashboard.html" class="uk-search uk-search-default">
+							<form @submit.prevent class="uk-search uk-search-default">
 								<span data-uk-search-icon></span>
-								<input class="uk-search-input search-field" type="search" placeholder="Search">
+								<input class="uk-search-input search-field" type="search" placeholder="Поиск">
 							</form>
 						</div>
 					</div>

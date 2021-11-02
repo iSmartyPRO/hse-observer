@@ -86,6 +86,7 @@
                   type="text"
                   placeholder="E-mail"
                   v-model="email"
+                  autocomplete="username"
                 />
               </div>
             </div>
@@ -100,6 +101,7 @@
                   type="password"
                   placeholder="Введите пароль для пользователя"
                   v-model="password"
+                  autocomplete="current-password"
                 />
               </div>
             </div>
@@ -118,7 +120,7 @@
                       name="authType"
                       v-model="authType"
                       value="local"
-                      :checked="authType === 'local'"                      
+                      :checked="authType === 'local'"
                     />
                     Локальная
                   </label>
@@ -192,7 +194,7 @@ export default {
       selectedBranches: [],
       password: null,
       authType: "local",
-      selectedRoles: [],  
+      selectedRoles: [],
 
       departments: null,
       branches: null,
@@ -211,7 +213,7 @@ export default {
           department: this.department,
           roles: this.selectedRoles
       }
-      axios.post('http://localhost:9090/api/user/', JSON.stringify(newUser), requestOptions.headersData())
+      axios.post(`${process.env.VUE_APP_API}/users`, JSON.stringify(newUser), requestOptions.headersData())
         .then(request => {
           if(request.status === 201) {
             this.$router.push("/users")
@@ -223,15 +225,15 @@ export default {
   },
   mounted() {
     axios
-      .get("http://localhost:9090/api/branch", requestOptions.get())
+      .get(`${process.env.VUE_APP_API}/branch`, requestOptions.get())
       .then((response) => (this.branches = response.data.data))
       .catch((err) => console.log(err));
     axios
-      .get("http://localhost:9090/api/department", requestOptions.get())
+      .get(`${process.env.VUE_APP_API}/department`, requestOptions.get())
       .then((response) => (this.departments = response.data.data))
       .catch((err) => console.log(err));
     axios
-      .get("http://localhost:9090/api/role", requestOptions.get())
+      .get(`${process.env.VUE_APP_API}/role`, requestOptions.get())
       .then((response) => (this.roles = response.data.data))
       .catch((err) => handleError(err));
   },

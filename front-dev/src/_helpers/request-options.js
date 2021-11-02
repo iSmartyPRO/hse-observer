@@ -28,10 +28,11 @@ export const requestOptions = {
             body: JSON.stringify(body)
         };
     },
-    delete() {
+    delete(params) {
         return {
             method: 'DELETE',
-            ...headers()
+            ...headers(),
+            body: params
         };
     },
     headersData() {

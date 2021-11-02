@@ -17,19 +17,11 @@
           </div>
           <div class="uk-card-footer uk-padding-remove-left uk-padding-remove-bottom">
             <router-link :to="{name: 'UserEdit', params: {userId: user._id}}"><button class="uk-button uk-button-primary uk-button-small"><span uk-icon="pencil"></span></button></router-link>
-            <button class="uk-button uk-button-danger uk-button-small"><span uk-icon="trash" @click="deleteUser(user._id, user.name)"></span></button>
+            <button class="uk-button uk-button-danger uk-button-small"><span uk-icon="trash" @click="deleteDocument(user._id, user.name)"></span></button>
           </div>
         </div>
       </div>
     </div>
-    
-    
-    <div>
-    <custom-modal v-model="show" @confirm="confirm" @cancel="cancel">
-      <template v-slot:title>Удалить пользователя?</template>
-      <p>{{delUserName}}</p>
-    </custom-modal>
-  </div>
   </Content>
 
 
@@ -39,15 +31,12 @@
 <script>
 import Content from "../../views/Dashboard/Content.vue";
 import axios from "axios";
-import { requestOptions } from "../../_helpers/request-options";
-import CustomModal from "../../components/CustomModal.vue"
-import { handleError } from '@vue/runtime-core';
+import { requestOptions, handleError } from "../../_helpers";
 import {useToast} from 'vue-toastification'
 
 export default {
-  components: { 
-    Content, 
-    CustomModal
+  components: {
+    Content
  },
   name: "Users",
   setup() {
@@ -56,39 +45,28 @@ export default {
   },
   data() {
     return {
-      users: null,
-      isDeleteUser: false,
-      show: false,
-      delUserId: null,
-      delUserName: null,
+      users: null
+
     };
   },
   methods: {
-    deleteUser(id, name) {
-      this.delUserId = id
-      this.delUserName = name
-      this.show = true
-    },
-    confirm(){
-      axios.delete('http://localhost:9090/api/user/' + this.delUserId, requestOptions.headersData())
-        .then(response => {
-          if(response.status === 200){
-            this.users = this.users.filter(item => item._id != this.delUserId)
-            this.show = false
-            this.toast.warning(`Удален пользователь: ${this.delUserName}`)
-          }
+    deleteDocument(id, name){
+      UIkit.modal.confirm(`Действителньо хотите удалить роль ${name} ?`)
+        .then(() => {
+          axios.delete(`${process.env.VUE_APP_API}/user/${id}`, requestOptions.headersData())
+            .then(response => {
+              if(response.status === 200){
+                this.users = this.users.filter(item => item._id != id)
+                this.toast.warning(`Удален пользователь: ${name}`)
+              }
+            })
+            .catch(err => handleError(err))
         })
-        .catch(err => handleError(err))
-    },
-    cancel(){
-      this.show = false
-      this.delUserId = null
-      this.isDeleteUser - null
     }
   },
   mounted() {
     axios
-      .get(`http://localhost:9090/api/user`, requestOptions.headersData())
+      .get(`${process.env.VUE_APP_API}/user`, requestOptions.headersData())
       .then((response) => {
         this.users = response.data.data;
       })

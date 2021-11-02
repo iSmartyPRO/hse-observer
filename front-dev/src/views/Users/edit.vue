@@ -2,9 +2,10 @@
   <Content>
     <div class="uk-card uk-card-default">
       <div class="uk-card-body">
-        <form @submit.prevent="handleSubmit">
+        <button class="uk-button uk-button-primary" @click="handlePrevPage">Назад</button>
+        <form @submit.prevent>
           <fieldset class="uk-fieldset">
-            <legend class="uk-legend">Редактирование пользователя {{user.branches}}</legend>
+            <legend class="uk-legend">Редактирование пользователя</legend>
 
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text"
@@ -15,7 +16,7 @@
                   class="uk-input"
                   type="text"
                   placeholder="Введите фамилию и имя"
-                  v-model="user.name"                  
+                  v-model="name"
                 />
               </div>
             </div>
@@ -27,15 +28,15 @@
                 <div
                   class="uk-margin uk-grid-small uk-child-width-auto uk-grid"
                 >
-                  <label v-for="branch in branches" :key="branch._id">
+                  <label v-for="b in branchList" :key="b._id">
                     <input
-                      v-model="selectedBranches"
+                      v-model="branches"
+                      :value="b.name"
                       class="uk-check"
                       type="checkbox"
-                      :value="branch.name"
-                      :checked="user.branches.filter(item => item.name == branch.name)"
+                      :checked="branches.includes(b.name)"
                     />
-                    {{ branch.name }}
+                    {{ b.name }}
                   </label>
                 </div>
               </div>
@@ -52,11 +53,12 @@
                   class="uk-select"
                 >
                   <option
-                    v-for="department in departments"
-                    :key="department._id"
-                    :value="department.name"
+                    v-for="d in departmentList"
+                    :key="d._id"
+                    :value="d.name"
+                    :selected="department === d.name"
                   >
-                    {{ department.name }}
+                    {{ d.name }}
                   </option>
                 </select>
               </div>
@@ -85,22 +87,47 @@
                   id="email"
                   type="text"
                   placeholder="E-mail"
-                  v-model="user.email"
+                  v-model="email"
+                  autocomplete="username"
                 />
               </div>
             </div>
-            <div class="uk-margin">
+            <button class="uk-button uk-button-secondary" v-if="!ShowPasswordField" @click="handleShowPasswordField">Изменить пароль</button>
+            <div class="uk-margin" v-else>
               <label class="uk-form-label" for="form-stacked-text">
                 Пароль *
               </label>
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
-                  id="password"
+                  id="updatePassword"
                   type="password"
+                  autocomplete="current-password"
                   placeholder="Введите пароль для пользователя"
-                  v-model="password"
+                  v-model="updatePassword"
                 />
+              </div>
+            </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="form-stacked-text">
+                Язык
+              </label>
+              <div class="uk-form-controls">
+                <div
+                  class="uk-margin uk-grid-small uk-child-width-auto uk-grid"
+                >
+                  <label v-for="lang in languages" :key="lang.name"
+                    ><input
+                      class="uk-radio"
+                      type="radio"
+                      name="selectedLanguage"
+                      v-model="selectedLanguage"
+                      :value="lang.name"
+                      :checked="lang.name === selectedLanguage"
+                    />
+                    {{lang.displayName}}
+                  </label>
+                </div>
               </div>
             </div>
             <div class="uk-margin">
@@ -118,7 +145,7 @@
                       name="authType"
                       v-model="authType"
                       value="local"
-                      :checked="authType === 'local'"                      
+                      :checked="authType === 'local'"
                     />
                     Локальная
                   </label>
@@ -129,6 +156,7 @@
                       name="authType"
                       value="ad"
                       v-model="authType"
+                      :checked="authType === 'ad'"
                     />
                     Active Directory
                   </label>
@@ -141,24 +169,26 @@
                 <div
                   class="uk-margin uk-grid-small uk-child-width-auto uk-grid"
                 >
-                  <label v-for="role in roles" :key="role._id">
+                <div v-for="r in roleList" :key="r._id" class="">
+                  <label>
                     <input
                       class="uk-check"
                       type="checkbox"
                       name="authType"
-                      :value="role.name"
-                      v-model="selectedRoles"
+                      :value="r.name"
+                      v-model="roles"
+                      :checked="roles.includes(r.name)"
                     />
-                    {{ role.description }} ({{ role.name }})
+                    {{ r.description }} ({{ r.name }})
                   </label>
+                  </div>
                 </div>
               </div>
             </div>
-
             <div class="uk-margin">
               <div class="uk-form-controls">
-                <button type="submit" class="uk-button uk-button-primary">
-                  Создать пользователя
+                <button class="uk-button uk-button-primary" @click="update">
+                  Обновить данные
                 </button>
               </div>
             </div>
@@ -172,7 +202,7 @@
 <script>
 import Content from "../../views/Dashboard/Content.vue";
 import axios from "axios";
-import { requestOptions, handleError } from "../../_helpers"
+import { requestOptions, handleError, languages } from "../../_helpers"
 import {useToast} from 'vue-toastification'
 
 
@@ -185,63 +215,92 @@ export default {
   name: "UserEdit",
   data() {
     return {
+      languages,
       user: {},
 
-      position: null,
+      branchList: [],
+      departmentList: [],
+      roleList: [],
+      selectedLanguage: null,
+
+      name: null,
+      branches: [],
       department: null,
-      selectedBranches: [],
+      position: null,
+      email: null,
       password: null,
-      authType: "local",
-      selectedRoles: [],  
-      departments: null,
-      branches: null,
-      roles: null
+      authType: null,
+      roles: [],
+
+      updatePassword: null,
+
+      ShowPasswordField: false
     };
   },
   methods: {
-    handleSubmit() {
-      let newUser = {
-          name: this.name,
-          email: this.email,
-          authType: this.authType,
-          password: this.password,
-          position: this.position,
-          branches: this.selectedBranches,
-          department: this.department,
-          roles: this.selectedRoles
+    update () {
+      let updatedData = {
+        name: this.name,
+        branches: this.branches,
+        department: this.department,
+        position: this.position,
+        email: this.email,
+        authType: this.authType,
+        roles: this.roles,
+        language: this.selectedLanguage
       }
-      axios.post('http://localhost:9090/api/user/', JSON.stringify(newUser), requestOptions.headersData())
+      if(this.updatePassword) {
+        updatedData.password = this.updatePassword
+      }
+      axios.patch(`${process.env.VUE_APP_API}/user/` + this.$route.params.userId, JSON.stringify(updatedData), requestOptions.headersData())
         .then(request => {
-          if(request.status === 201) {
+          if(request.status === 200) {
             this.$router.push("/users")
-            this.toast.success(`New user "${request.data.data.name}" created`)
+            this.toast.success(`Обновлена информация для "${request.data.data.name}"`)
           }
         })
         .catch(err => handleError(err) )
     },
+    handleShowPasswordField() {
+      this.ShowPasswordField = true
+    },
+    handlePrevPage() {
+      this.$router.go(-1)
+    }
   },
-  mounted() {
+  created() {
     axios
-      .get("http://localhost:9090/api/user/" + this.$route.params.userId, requestOptions.get())
+      .get(`${process.env.VUE_APP_API}/user/` + this.$route.params.userId, requestOptions.get())
       .then((response) => {
           this.user = response.data.data
-          console.log(this.user.branches.filter(item => item.name == "CO" ? true : false))
-          })
+          this.name = this.user.name
+          this.branches = this.user.branches.map((item) => {return item.name})
+          this.department = this.user.department.name
+          this.position = this.user.position
+          this.email = this.user.email
+          this.password = null
+          this.authType = this.user.authType
+          this.selectedLanguage = this.user.language
+          this.roles = this.user.roles.map(item => item.name)
+         })
       .catch((err) => console.log(err))
     axios
-      .get("http://localhost:9090/api/branch", requestOptions.get())
-      .then((response) => (this.branches = response.data.data))
+      .get(`${process.env.VUE_APP_API}/branch`, requestOptions.get())
+      .then((response) => {
+        this.branchList = response.data.data
+      } )
       .catch((err) => console.log(err));
     axios
-      .get("http://localhost:9090/api/department", requestOptions.get())
-      .then((response) => (this.departments = response.data.data))
+      .get(`${process.env.VUE_APP_API}/department`, requestOptions.get())
+      .then((response) => {
+        this.departmentList = response.data.data
+      })
       .catch((err) => console.log(err));
     axios
-      .get("http://localhost:9090/api/role", requestOptions.get())
-      .then((response) => (this.roles = response.data.data))
+      .get(`${process.env.VUE_APP_API}/role`, requestOptions.get())
+      .then((response) => (this.roleList = response.data.data))
       .catch((err) => handleError(err));
-
-  },
+  }
 };
 </script>
 

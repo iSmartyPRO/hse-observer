@@ -1,6 +1,6 @@
 <template>
   <Content>
-    Dashboard
+    Dash
   </Content>
 </template>
 

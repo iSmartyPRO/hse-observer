@@ -13,16 +13,22 @@ import UserCreate from '../views/Users/create.vue'
 import UserEdit from '../views/Users/edit.vue'
 
 // Bracnhes
-import Branches from '../views/Bracnhes/index.vue'
+import Branches from '../views/Branches/index.vue'
+import BranchCreate from '../views/Branches/create.vue'
+import BranchEdit from '../views/Branches/edit.vue'
 
 // Departments
 import Departments from '../views/Departments/index.vue'
+import DepartmentCreate from '../views/Departments/create.vue'
+import DepartmentEdit from '../views/Departments/edit.vue'
 
 // Observes
 import Observes from '../views/Observes/index.vue'
 
 // Roles
 import Roles from '../views/Roles/index.vue'
+import RoleCreate from '../views/Roles/create.vue'
+import RoleEdit from '../views/Roles/edit.vue'
 
 const toast = useToast();
 
@@ -67,9 +73,33 @@ const routes = [
     meta: { authorize: [Role.Admin] }
   },
   {
+    path: '/department/create',
+    name: 'DepartmentCreate',
+    component: DepartmentCreate,
+    meta: { authorize: [Role.Admin] }
+  },
+  {
+    path: '/department/:departmentId',
+    name: 'DepartmentEdit',
+    component: DepartmentEdit,
+    meta: { authorize: [Role.Admin] }
+  },
+  {
     path: '/branches',
     name: 'Branches',
     component: Branches,
+    meta: { authorize: [Role.Admin] }
+  },
+  {
+    path: '/branch/create',
+    name: 'BranchCreate',
+    component: BranchCreate,
+    meta: { authorize: [Role.Admin] }
+  },
+  {
+    path: '/branch/:branchId',
+    name: 'BranchEdit',
+    component: BranchEdit,
     meta: { authorize: [Role.Admin] }
   },
   {
@@ -81,14 +111,25 @@ const routes = [
     path: '/roles',
     name: 'Roles',
     component: Roles,
-    meta: { authorize: [Role.Standard] } 
+    meta: { authorize: [Role.Admin] }
+  },
+  {
+    path: '/role/create',
+    name: 'RoleCreate',
+    component: RoleCreate,
+    meta: { authorize: [Role.Admin] }
+  },
+  {
+    path: '/role/:roleId',
+    name: 'RoleEdit',
+    component: RoleEdit,
+    meta: { authorize: [Role.Admin] }
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes,
-  apiUrl: 'http://localhost:9090/api',
+  routes
 })
 router.beforeEach((to, from, next) => {
   const {authorize} = to.meta
