@@ -106,6 +106,28 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text">
+                {{$t('language')}}
+              </label>
+              <div class="uk-form-controls">
+                <div
+                  class="uk-margin uk-grid-small uk-child-width-auto uk-grid"
+                >
+                  <label v-for="lang in languages" :key="lang.name"
+                    ><input
+                      class="uk-radio"
+                      type="radio"
+                      name="selectedLanguage"
+                      v-model="selectedLanguage"
+                      :value="lang.name"
+                      :checked="lang.name === 'ru'"
+                    />
+                    {{lang.displayName}}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="form-stacked-text">
                 {{$t('authType')}}
               </label>
               <div class="uk-form-controls">
@@ -173,7 +195,7 @@
 <script>
 import Content from "../../views/Dashboard/Content.vue";
 import axios from "axios";
-import { requestOptions, handleError } from "../../_helpers"
+import { requestOptions, handleError, languages } from "../../_helpers"
 import {useToast} from 'vue-toastification'
 
 
@@ -186,6 +208,7 @@ export default {
   name: "UserCreate",
   data() {
     return {
+      languages,
       name: null,
       email: null,
       position: null,
