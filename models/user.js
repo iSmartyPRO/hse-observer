@@ -32,7 +32,11 @@ const userSchema = mongoose.Schema({
   roles: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role'
-  }]
+  }],
+  language: {
+    type: String,
+    required: true
+  }
 })
 
 module.exports = mongoose.model("User", userSchema)

@@ -2,34 +2,33 @@
   <Content>
     <div class="uk-card uk-card-default">
       <div class="uk-card-body">
-        <button class="uk-button uk-button-primary" @click="handlePrevPage">Назад</button>
+        <button class="uk-button uk-button-primary" @click="handlePrevPage">{{$t('back')}}</button>
         <form @submit.prevent>
           <fieldset class="uk-fieldset">
-            <legend class="uk-legend">Редактирование объекта</legend>
-
+            <h2 class="uk-text-bold">{{$t('branch.edit')}}</h2>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text"
-                >Название объекта *</label
+                >{{$t('branch.name')}} *</label
               >
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   type="text"
-                  placeholder="Введите название объекта"
+                  :placeholder="$t('branch.enterName')"
                   v-model="name"
                 />
               </div>
             </div>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text">
-                Расположение *
+                {{$t('branch.location')}} *
               </label>
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   id="location"
                   type="text"
-                  placeholder="Введите адрес"
+                  :placeholder="$t('branch.enterAddress')"
                   v-model="location"
                 />
               </div>
@@ -37,7 +36,7 @@
             <div class="uk-margin">
               <div class="uk-form-controls">
                 <button class="uk-button uk-button-primary" @click="update">
-                  Обновить данные
+                  {{$t('updateData')}}
                 </button>
               </div>
             </div>

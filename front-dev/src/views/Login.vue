@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import '../assets/login-dark.css'
 import {required} from 'vuelidate/lib/validators'
 import {authService} from '../components/auth'
 import {useRouter} from 'vue-router'

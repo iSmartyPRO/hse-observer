@@ -4,18 +4,17 @@
       <div class="uk-card-body">
         <form @submit.prevent="handleSubmit">
           <fieldset class="uk-fieldset">
-            <legend class="uk-legend">Новый отдел</legend>
-
+            <h2 class="uk-text-bold">{{ $t('department.new')}}</h2>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text"
-                >Название отдела *</label
+                >{{ $t('department.name') }} *</label
               >
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   id="name"
                   type="text"
-                  placeholder="Введите название отдела"
+                  :placeholder="$t('department.enterName')"
                   v-model="name"
                 />
               </div>
@@ -23,7 +22,7 @@
             <div class="uk-margin">
               <div class="uk-form-controls">
                 <button type="submit" class="uk-button uk-button-primary">
-                  Создать отдел
+                  {{ $t('department.create') }}
                 </button>
               </div>
             </div>

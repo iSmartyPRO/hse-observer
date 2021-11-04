@@ -2,20 +2,20 @@
   <Content>
     <div class="uk-card uk-card-default">
       <div class="uk-card-body">
-        <button class="uk-button uk-button-primary" @click="handlePrevPage">Назад</button>
+        <button class="uk-button uk-button-primary" @click="handlePrevPage">{{ $t('back') }}</button>
         <form @submit.prevent>
           <fieldset class="uk-fieldset">
-            <legend class="uk-legend">Редактирование отдела</legend>
+            <h2 class="uk-text-bold">{{ $t('department.edit') }}</h2>
 
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text"
-                >Название отдела *</label
+                >{{ $t('department.name') }} *</label
               >
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   type="text"
-                  placeholder="Введите название отдела"
+                  :placeholder="$t('department.enterName')"
                   v-model="name"
                 />
               </div>
@@ -23,7 +23,7 @@
             <div class="uk-margin">
               <div class="uk-form-controls">
                 <button class="uk-button uk-button-primary" @click="update">
-                  Обновить данные
+                  {{ $t('updateData')}}
                 </button>
               </div>
             </div>

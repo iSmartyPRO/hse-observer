@@ -1,8 +1,9 @@
 <template>
   <Content>
     <div class="uk-margin-top uk-margin-bottom">
-      <router-link :to="{name: 'RoleCreate'}" class="uk-button uk-button-primary"><span uk-icon="copy"></span> Добавить</router-link>
+      <router-link :to="{name: 'RoleCreate'}" class="uk-button uk-button-primary"><span uk-icon="copy"></span> {{ $t('add') }}</router-link>
     </div>
+    <h2 class="uk-text-bold">{{$t("menu.roles")}}</h2>
     <div class="uk-child-width-1-3@m uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
       <div v-for="role in roles" :key="role._id">
         <div class="uk-card uk-card-default uk-card-body">
@@ -44,13 +45,13 @@ export default {
   },
   methods: {
     deleteDocument(id, name) {
-      UIkit.modal.confirm(`Действителньо хотите удалить роль ${name} ?`)
+      UIkit.modal.confirm(this.$t('areYouSureDelete',{name}))
         .then(() => {
           axios.delete(`${process.env.VUE_APP_API}/role/${id}`, requestOptions.headersData())
             .then(response => {
               if(response.status === 200){
                 this.roles = this.roles.filter(item => item._id != id)
-                this.toast.warning(`Удалена роль: ${name}`)
+                this.toast.warning(this.$t("role.deleted", {name}))
               }
             })
         .catch(err => handleError(err))

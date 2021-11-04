@@ -10,7 +10,7 @@
 						<div class="uk-navbar-item uk-visible@s">
 							<form @submit.prevent class="uk-search uk-search-default">
 								<span data-uk-search-icon></span>
-								<input class="uk-search-input search-field" type="search" placeholder="Поиск">
+								<input class="uk-search-input search-field" type="search" :placeholder="$t('search')">
 							</form>
 						</div>
 					</div>

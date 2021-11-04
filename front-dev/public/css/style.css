@@ -1,0 +1,18 @@
+.uk-button-primary, .uk-background-primary {
+  background-color: #2F3D58;
+}
+.uk-button-primary:hover {
+  background-color: #44577D;
+}
+.uk-button-danger {
+  background-color: #b70426;
+}
+.uk-button-danger:hover {
+  background-color: #ff0434;
+}
+#left-col ul.uk-nav-default > li > a.active-menu {
+	border-left: 2px solid #ee395b;
+  padding-left: 30px;
+  color: white;
+  background-color: rgba(0,0,0,0.1);
+}

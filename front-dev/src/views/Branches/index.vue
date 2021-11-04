@@ -1,8 +1,9 @@
 <template>
   <Content>
     <div class="uk-margin-top uk-margin-bottom">
-      <router-link :to="{name: 'BranchCreate'}" class="uk-button uk-button-primary"><span uk-icon="copy"></span> Добавить</router-link>
+      <router-link :to="{name: 'BranchCreate'}" class="uk-button uk-button-primary"><span uk-icon="copy"></span> {{ $t('add') }}</router-link>
     </div>
+    <h2 class="uk-text-bold">{{$t("menu.branches")}}</h2>
     <div class="uk-child-width-1-3@m uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
       <div v-for="branch in branches" :key="branch._id">
         <div class="uk-card uk-card-default uk-card-body">
@@ -29,24 +30,24 @@ import Content from "../../views/Dashboard/Content.vue";
 import axios from "axios";
 import { requestOptions, handleError } from "../../_helpers";
 import {useToast} from 'vue-toastification'
-
 export default {
+  name: "Branches",
   components: {
     Content
- },
-  name: "Branches",
+  },
   setup() {
     const toast = useToast()
     return {toast}
   },
   data() {
     return {
+      title: 'Hello Branches',
       branches: null
     };
   },
   methods: {
     deleteBranch(id, name) {
-      UIkit.modal.confirm(`Действительно хотите удалить объект ${name} ?`)
+      UIkit.modal.confirm(this.$t('areYouSureDelete', {name}))
         .then(() => {
           axios.delete(`${process.env.VUE_APP_API}/branch/${id}`,requestOptions.delete({id}))
             .then(response => {
@@ -61,6 +62,7 @@ export default {
     },
   },
   mounted() {
+    this.$route.meta.title = this.title
     axios
       .get(`${process.env.VUE_APP_API}/branch`, requestOptions.headersData())
       .then((response) => {
@@ -70,5 +72,6 @@ export default {
         handleError(err)
       });
   },
+
 };
 </script>

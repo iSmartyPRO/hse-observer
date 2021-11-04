@@ -23,6 +23,7 @@ module.exports.login = async (req, res, next) => {
     let checkUser = await User.findOne({email}).populate("roles", "name")
     if(checkUser){
       let roles = checkUser.roles.map(item => { return item.name})
+      let language = checkUser.language ? checkUser.language : "ru"
       roles.length ? roles : roles = ["standard"] // if roles doesn't exist then assign standard
       if(checkUser.authType === 'ad') {
       // if authType is Active Directory then use ADLDAP Authentication
@@ -32,7 +33,7 @@ module.exports.login = async (req, res, next) => {
             console.log('ERROR: '+JSON.stringify(err));
           }
           if (auth) {
-            res.status(200).json({message: 'Successfully authenticated with Active Directory', uid: checkUser._id, roles, token: getToken(checkUser._id)})
+            res.status(200).json({message: 'Successfully authenticated with Active Directory', uid: checkUser._id, roles, token: getToken(checkUser._id), language})
           }
           else {
             res.status(401).json({message: `Active Directory authentication failed!`, error: err})
@@ -45,7 +46,7 @@ module.exports.login = async (req, res, next) => {
             res.status(500).json({message: "Error occur during checking password", error: err})
           } else {
             if(checkPassword){
-              res.status(200).json({message: "You are authorized!", uid: checkUser._id, roles, token: getToken(checkUser._id)})
+              res.status(200).json({message: "You are authorized!", uid: checkUser._id, roles, token: getToken(checkUser._id), language})
             } else {
               res.status(401).json({message: "Auth failed"})
             }

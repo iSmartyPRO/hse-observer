@@ -4,32 +4,31 @@
       <div class="uk-card-body">
         <form @submit.prevent="handleSubmit">
           <fieldset class="uk-fieldset">
-            <legend class="uk-legend">Новая роль</legend>
-
+            <h2 class="uk-text-bold">{{$t("role.new")}}</h2>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text"
-                >Название роли *</label
+                >{{$t("role.name")}} *</label
               >
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   id="name"
                   type="text"
-                  placeholder="Введите название роли"
+                  :placeholder="$t('role.enterName')"
                   v-model="name"
                 />
               </div>
             </div>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text"
-                >Описание роли *</label
+                >{{$t('role.description')}} *</label
               >
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   id="description"
                   type="text"
-                  placeholder="Опишите роль"
+                  :placeholder="$t('role.describe')"
                   v-model="description"
                 />
               </div>
@@ -37,7 +36,7 @@
             <div class="uk-margin">
               <div class="uk-form-controls">
                 <button type="submit" class="uk-button uk-button-primary">
-                  Создать роль
+                  {{ $t('role.create') }}
                 </button>
               </div>
             </div>
@@ -78,7 +77,7 @@ export default {
         .then(request => {
           if(request.status === 201) {
             this.$router.push("/roles")
-            this.toast.success(`Новая роль "${request.data.data.name}" создана`)
+            this.toast.success(this.$t('created',{name: request.data.data.name}))
           }
         })
         .catch(err => handleError(err) )

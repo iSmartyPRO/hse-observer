@@ -2,27 +2,27 @@
   <Content>
     <div class="uk-card uk-card-default">
       <div class="uk-card-body">
-        <button class="uk-button uk-button-primary" @click="handlePrevPage">Назад</button>
+        <button class="uk-button uk-button-primary" @click="handlePrevPage">{{$t('back')}}</button>
         <form @submit.prevent>
           <fieldset class="uk-fieldset">
-            <legend class="uk-legend">Редактирование пользователя</legend>
+            <h2 class="uk-text-bold">{{$t('user.edit')}}</h2>
 
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text"
-                >Фамилия и Имя *</label
+                >{{$t('user.lfName')}} *</label
               >
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   type="text"
-                  placeholder="Введите фамилию и имя"
+                  :placeholder="$t('user.enterlfName')"
                   v-model="name"
                 />
               </div>
             </div>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text"
-                >Объект</label
+                >{{$t('branch.singular')}}</label
               >
               <div class="uk-form-controls">
                 <div
@@ -43,7 +43,7 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text">
-                Отдел *
+                {{$t('department.singular')}} *
               </label>
               <div class="uk-form-controls">
                 <select
@@ -65,28 +65,28 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text">
-                Должность *
+                {{$t('position')}} *
               </label>
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   id="position"
                   type="text"
-                  placeholder="Должность"
+                  :placeholder="$t('position')"
                   v-model="position"
                 />
               </div>
             </div>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text"
-                >E-mail *</label
+                >{{$t('email')}} *</label
               >
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   id="email"
                   type="text"
-                  placeholder="E-mail"
+                  :placeholder="$t('email')"
                   v-model="email"
                   autocomplete="username"
                 />
@@ -95,7 +95,7 @@
             <button class="uk-button uk-button-secondary" v-if="!ShowPasswordField" @click="handleShowPasswordField">Изменить пароль</button>
             <div class="uk-margin" v-else>
               <label class="uk-form-label" for="form-stacked-text">
-                Пароль *
+                {{$t('password')}} *
               </label>
               <div class="uk-form-controls">
                 <input
@@ -103,14 +103,14 @@
                   id="updatePassword"
                   type="password"
                   autocomplete="current-password"
-                  placeholder="Введите пароль для пользователя"
+                  :placeholder="$t('enterPassword')"
                   v-model="updatePassword"
                 />
               </div>
             </div>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text">
-                Язык
+                {{$t('language')}}
               </label>
               <div class="uk-form-controls">
                 <div
@@ -132,7 +132,7 @@
             </div>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text">
-                Тип авторизации
+                {{$t('authType')}}
               </label>
               <div class="uk-form-controls">
                 <div
@@ -147,7 +147,7 @@
                       value="local"
                       :checked="authType === 'local'"
                     />
-                    Локальная
+                    {{$t('local')}}
                   </label>
                   <label>
                     <input
@@ -158,13 +158,13 @@
                       v-model="authType"
                       :checked="authType === 'ad'"
                     />
-                    Active Directory
+                    {{$t('ad')}}
                   </label>
                 </div>
               </div>
             </div>
             <div class="uk-margin">
-              <label class="uk-form-label" for="form-stacked-text">Роль</label>
+              <label class="uk-form-label" for="form-stacked-text">{{$t('role.singular')}}</label>
               <div class="uk-form-controls">
                 <div
                   class="uk-margin uk-grid-small uk-child-width-auto uk-grid"
@@ -188,7 +188,7 @@
             <div class="uk-margin">
               <div class="uk-form-controls">
                 <button class="uk-button uk-button-primary" @click="update">
-                  Обновить данные
+                  {{$t('updateData')}}
                 </button>
               </div>
             </div>
@@ -256,7 +256,7 @@ export default {
         .then(request => {
           if(request.status === 200) {
             this.$router.push("/users")
-            this.toast.success(`Обновлена информация для "${request.data.data.name}"`)
+            this.toast.success(this.$t('updatedFor', {name: request.data.data.name}))
           }
         })
         .catch(err => handleError(err) )

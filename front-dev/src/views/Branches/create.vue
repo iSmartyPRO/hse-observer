@@ -4,32 +4,31 @@
       <div class="uk-card-body">
         <form @submit.prevent="handleSubmit">
           <fieldset class="uk-fieldset">
-            <legend class="uk-legend">Новый объект</legend>
-
+            <h2 class="uk-text-bold">{{$t('branch.new')}}</h2>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text"
-                >Название объекта *</label
+                >{{$t('branch.name')}} *</label
               >
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   id="name"
                   type="text"
-                  placeholder="Введите название объекта"
+                  :placeholder="$t('branch.enterName')"
                   v-model="name"
                 />
               </div>
             </div>
             <div class="uk-margin">
               <label class="uk-form-label" for="form-stacked-text">
-                Расположение объекта *
+                {{$t('branch.location')}} *
               </label>
               <div class="uk-form-controls">
                 <input
                   class="uk-input"
                   id="location"
                   type="text"
-                  placeholder="Введите адрес"
+                  :placeholder="$t('branch.enterName')"
                   v-model="location"
                 />
               </div>
@@ -37,7 +36,7 @@
             <div class="uk-margin">
               <div class="uk-form-controls">
                 <button type="submit" class="uk-button uk-button-primary">
-                  Создать объект
+                  {{$t('branch.create')}}
                 </button>
               </div>
             </div>

@@ -1,4 +1,6 @@
+const { response } = require('express')
 const Model = require("../models/department")
+const User = require("../models/user")
 
 module.exports.getAll = (req, res, next) => {
   try {
@@ -67,19 +69,27 @@ module.exports.update = (req, res, next) => {
 
 
 }
-module.exports.delete = (req, res, next) => {
+module.exports.delete = async (req, res, next) => {
   let {id} = req.params
-  Model.findByIdAndDelete(id, (err, data) => {
-    if(err) console.log(err)
-    if(data){
-      res.status(200).json({
-        message: `Delete your data by id: ${id}`,
-        data
-      })
-    } else {
-      res.status(404).json({
-        message: `Data for ID: ${id} is not found, can't be deleted!`,
-      })
-    }
-  })
+  let checkDependency = await User.find({department: id})
+  if(!checkDependency.length){
+    Model.findByIdAndDelete(id, (err, data) => {
+      if(err) console.log(err)
+      if(data){
+        res.status(200).json({
+          message: `Удален отдел: ${data.name}`,
+          data
+        })
+      } else {
+        res.status(404).json({
+          message: `Не найден ID: ${id}!`,
+        })
+      }
+    })
+  } else {
+    res.status(409).json({
+      message: `Нельзя удалить. Имеются зависимости.`,
+      dependencies: checkDependency.map(item => {return item.name})
+    })
+  }
 }

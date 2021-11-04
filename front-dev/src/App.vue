@@ -7,8 +7,6 @@
 </template>
 
 <script>
-import './assets/dashboard.css'
-
 import { authService } from './components/auth'
 import Header from './views/Dashboard/Header.vue'
 import Leftbar from './views/Dashboard/Leftbar.vue'

@@ -1,6 +1,6 @@
 <template>
   <Content>
-    Dash
+    <h2 class="uk-text-bold">{{ $t('welcome') }}</h2>
   </Content>
 </template>
 

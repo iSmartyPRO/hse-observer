@@ -3,6 +3,7 @@ const Model = require("../models/user")
 const Branch = require("../models/branch")
 const Department = require("../models/department")
 const Role = require("../models/role")
+const department = require('../models/department')
 
 // Получение списка всех пользователей
 module.exports.getAll = (req, res, next) => {
@@ -25,7 +26,7 @@ module.exports.get = (req, res, next) => {
   let {id} = req.params
   try{
     Model.findById(id)
-      .select("_id name email branch department position authType password plainTextPassword roles")
+      .select("_id name email branch department position authType roles language")
       .populate("branches", "name")
       .populate("department", "name")
       .populate("roles", "name description")
@@ -103,12 +104,25 @@ module.exports.update = async (req, res, next) => {
     let rolesArr = await Role.find({name: body.roles}).select('_id')
     body.roles = rolesArr
   }
+  if(body.department) {
+    let departmentData = await Department.findOne({name: body.department}).select('_id')
+    body.department = departmentData
+  }
+  if(body.branches) {
+    let branchesArr = await Branch.find({name: body.branches}).select('_id')
+    body.branches = branchesArr
+  }
+  if(body.password) {
+    body.password = bcrypt.hashSync(body.password, 10)
+  }
   Model.findByIdAndUpdate(id, body, {new: true}, (err, data) => {
     if(err) console.log(err)
     if(data){
       res.status(200).json({
         message: `Your data is updated by id: ${id}`,
-        data
+        data: {
+          name: data.name
+        }
       })
     } else {
       res.status(404).json({

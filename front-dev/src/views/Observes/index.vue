@@ -1,6 +1,6 @@
 <template>
   <Content>
-    Observes
+    <h2 class="uk-text-bold">{{$t('observes')}}</h2>
   </Content>
 </template>
 
